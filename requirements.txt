@@ -1,0 +1,8 @@
+numpy>=2.0
+pandas>=2.2
+scikit-learn==1.9.1   # the saved model must be loaded with the same version it was trained with
+scipy>=1.13
+matplotlib>=3.9
+joblib>=1.4
+ipykernel>=6.29       # to run the notebook
+nbformat>=5.10

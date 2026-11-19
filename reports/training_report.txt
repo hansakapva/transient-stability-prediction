@@ -1,0 +1,137 @@
+Dataset: IEEE39_voltage_frequency_4sample_dataset.csv
+rows                               3715
+columns                              85
+missing values                        0
+infinite values                       0
+duplicate rows                        0
+rows with voltage > 1.1 p.u.         10
+rows with |f - 50| > 5 Hz            10
+rows with an impossible reading      10
+
+== Split (by contingency) ==
+            rows  contingencies  stable  unstable  unstable_pct  share_of_rows_pct
+set                                                                               
+Train       2655            531    2172       483          18.2               71.5
+Validation   530            106     434        96          18.1               14.3
+Test         530            106     433        97          18.3               14.3
+Rows with impossible readings (train / validation / test): [10, 0, 0]
+
+== Choosing settings: grouped 5-fold cross-validation inside the training set ==
+max_depth  min_samples_leaf max_features class_weight  cv_bal_acc  cv_std
+     None                10          0.3     balanced      0.9417  0.0405
+       16                10          0.3     balanced      0.9417  0.0405
+        8                10          0.3     balanced      0.9417  0.0405
+     None                 3          0.6     balanced      0.9412  0.0388
+       16                 3          0.6     balanced      0.9412  0.0388
+        8                 3          0.6     balanced      0.9412  0.0388
+     None                 1          0.6     balanced      0.9407  0.0392
+       16                 1          0.6     balanced      0.9407  0.0392
+     None                10          0.6     balanced      0.9399  0.0368
+       16                10          0.6     balanced      0.9399  0.0368
+Chosen: {'class_weight': 'balanced', 'max_depth': None, 'max_features': 0.3, 'min_samples_leaf': 10}
+
+== Results ==
+Cross-validation on train (chosen setting): balanced accuracy 0.9417 +/- 0.0405
+Train and Validation rows: forest fitted on the training set.
+Test row: final forest refitted on train + validation, scored once on the untouched test set.
+            accuracy  balanced_accuracy  unstable_recall  unstable_precision  unstable_f1  stable_recall  roc_auc  average_precision
+Train         0.9834             0.9891           0.9979              0.9181       0.9563         0.9802   0.9996             0.9983
+Validation    0.9698             0.9694           0.9688              0.8774       0.9208         0.9700   0.9968             0.9866
+Test          0.9528             0.9551           0.9588              0.8158       0.8815         0.9515   0.9931             0.9739
+
+Validation confusion matrix:
+                 predicted Unstable  predicted Stable
+actual Unstable                  93                 3
+actual Stable                    13               421
+
+Test confusion matrix:
+                 predicted Unstable  predicted Stable
+actual Unstable                  93                 4
+actual Stable                    21               412
+
+Test results by contingency type:
+                        cases  accuracy  unstable  unstable_found  unstable_missed  false_alarms
+Contingency_Type                                                                                
+Generator_Trip              5    1.0000         0               0                0             0
+Ground_Fault_Line_Trip    435    0.9632        64              60                4            12
+Line_Trip                  80    0.8875        33              33                0             9
+Load_Disconnection         10    1.0000         0               0                0             0
+
+Test results by load change (%):
+                 cases  accuracy  unstable  unstable_found  unstable_missed  false_alarms
+Load_Change_pct                                                                          
+-4.0               106    0.9245        14              12                2             6
+-2.0               106    0.9434        17              16                1             5
+ 0.0               106    0.9717        21              20                1             2
+ 2.0               106    0.9623        22              22                0             4
+ 4.0               106    0.9623        23              23                0             4
+
+Validation errors grouped by contingency:
+                                        cases   load_levels  p_min  p_max            error
+Contingency_ID                                                                            
+LineTrip_2_3_Ckt1_Fault0p5s                 2      -4%, -2%  0.376  0.389  missed unstable
+LineTrip_2_25_Ckt1_Fault0p5s                1           -4%  0.488  0.488  missed unstable
+3PHG_Line16_17_Ckt1_Loc20pct_Fault0p3s      3  -4%, -2%, 0%  0.738  0.850      false alarm
+3PHG_Line16_24_Ckt1_Loc80pct_Fault0p3s      3  0%, +2%, +4%  0.530  0.539      false alarm
+3PHG_Line9_39_Ckt1_Loc80pct_Fault0p5s       3  -2%, 0%, +2%  0.516  0.556      false alarm
+3PHG_Line17_18_Ckt1_Loc80pct_Fault0p5s      1           +2%  0.730  0.730      false alarm
+LLG_Line5_8_Ckt1_Loc80pct_Fault0p5s         1           +4%  0.634  0.634      false alarm
+LineTrip_3_4_Ckt1_Fault0p5s                 1           -4%  0.702  0.702      false alarm
+LineTrip_4_14_Ckt1_Fault0p3s                1           -2%  0.636  0.636      false alarm
+
+Test errors grouped by contingency:
+                                        cases             load_levels  p_min  p_max            error
+Contingency_ID                                                                                      
+3PHG_Line28_29_Ckt1_Loc80pct_Fault0p5s      3            -4%, -2%, 0%  0.212  0.460  missed unstable
+3PHG_Line28_29_Ckt1_Loc20pct_Fault0p5s      1                     -4%  0.292  0.292  missed unstable
+LLG_Line16_17_Ckt1_Loc20pct_Fault0p5s       5  -4%, -2%, 0%, +2%, +4%  0.570  0.659      false alarm
+LineTrip_22_23_Ckt1_Fault0p3s               5  -4%, -2%, 0%, +2%, +4%  0.731  0.841      false alarm
+3PHG_Line16_17_Ckt1_Loc80pct_Fault0p3s      2                +2%, +4%  0.588  0.671      false alarm
+3PHG_Line21_22_Ckt1_Loc20pct_Fault0p3s      2                -4%, -2%  0.538  0.580      false alarm
+LLG_Line10_11_Ckt1_Loc20pct_Fault0p5s       1                     -2%  0.796  0.796      false alarm
+LLG_Line5_6_Ckt1_Loc20pct_Fault0p5s         1                     -2%  0.792  0.792      false alarm
+LLG_Line7_8_Ckt1_Loc20pct_Fault0p5s         1                     +4%  0.542  0.542      false alarm
+LineTrip_14_15_Ckt1_Fault0p3s               1                     -4%  0.582  0.582      false alarm
+LineTrip_16_24_Ckt1_Fault0p3s               1                     +2%  0.599  0.599      false alarm
+LineTrip_17_18_Ckt1_Fault0p5s               1                     -4%  0.670  0.670      false alarm
+LineTrip_23_24_Ckt1_Fault0p3s               1                     -4%  0.784  0.784      false alarm
+
+Permutation importance (top 10):
+bus  quantity feature_group  importance    std
+B34 frequency B34 frequency      0.1282 0.0096
+B33 frequency B33 frequency      0.1038 0.0099
+B39 frequency B39 frequency      0.0206 0.0037
+B38 frequency B38 frequency      0.0076 0.0019
+B38   voltage   B38 voltage      0.0073 0.0003
+B33   voltage   B33 voltage      0.0073 0.0050
+B32 frequency B32 frequency      0.0033 0.0021
+B31   voltage   B31 voltage      0.0031 0.0009
+B30 frequency B30 frequency      0.0027 0.0012
+B32   voltage   B32 voltage      0.0025 0.0026
+
+Impurity importance (top 10):
+bus  quantity feature_group  importance  std
+B34 frequency B34 frequency      0.3711  0.0
+B33 frequency B33 frequency      0.2759  0.0
+B33   voltage   B33 voltage      0.0609  0.0
+B39 frequency B39 frequency      0.0471  0.0
+B32 frequency B32 frequency      0.0390  0.0
+B32   voltage   B32 voltage      0.0370  0.0
+B35   voltage   B35 voltage      0.0330  0.0
+B31   voltage   B31 voltage      0.0247  0.0
+B34   voltage   B34 voltage      0.0210  0.0
+B31 frequency B31 frequency      0.0193  0.0
+
+Learning curve:
+ fraction  training_rows  train_bal_acc  val_bal_acc
+      0.1            265         0.9879       0.8809
+      0.2            530         0.9871       0.8809
+      0.4           1060         0.9872       0.8803
+      0.6           1595         0.9865       0.9526
+      0.8           2125         0.9898       0.9711
+      1.0           2655         0.9891       0.9694
+
+Model saved   -> E:\Data Anltics\random_forest\models\stability_rf.joblib
+Example input -> E:\Data Anltics\random_forest\examples\example_case_unstable.csv  (actual: unstable, LT_00166)
+Example input -> E:\Data Anltics\random_forest\examples\example_case_stable.csv  (actual: stable, GT_00009)
+Figures saved -> E:\Data Anltics\random_forest\figures
